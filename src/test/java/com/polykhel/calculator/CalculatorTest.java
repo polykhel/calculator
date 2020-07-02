@@ -4,6 +4,9 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+/**
+ * Calculator Test.
+ */
 public class CalculatorTest {
     private final Calculator calculator = new Calculator();
 
