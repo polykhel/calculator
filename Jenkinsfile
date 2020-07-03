@@ -1,5 +1,11 @@
 pipeline {
     agent any
+
+    environment {
+        registry = "polypollens"
+        registryCredential = 'dockerhub'
+    }
+
     stages {
         stage("Compile") {
             steps {
@@ -39,17 +45,17 @@ pipeline {
         }
         stage("Docker build") {
             steps {
-                sh "docker build -t localhost:5000/calculator ."
+                sh "docker build -t ${registry}/calculator ."
             }
         }
         stage("Docker push") {
             steps {
-                sh "docker push localhost:5000/calculator"
+                sh "docker push ${registry}/calculator"
             }
         }
         stage("Deploy to staging") {
             steps {
-                sh "docker run -d --rm -p 8765:8080 --name calculator localhost:5000/calculator"
+                sh "docker run -d --rm -p 8765:8080 --name calculator ${registry}/calculator"
             }
         }
     }
