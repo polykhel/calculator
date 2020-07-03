@@ -16,9 +16,13 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.data:spring-data-redis'
+    implementation 'redis.clients:jedis'
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
+    testImplementation 'io.cucumber:cucumber-java:6.1.2'
+    testImplementation 'io.cucumber:cucumber-junit:6.1.2'
 }
 
 test {
@@ -33,4 +37,13 @@ jacocoTestCoverageVerification {
             }
         }
     }
+}
+
+task acceptanceTest(type: Test) {
+    include '**/acceptance/**'
+    systemProperties System.getProperties()
+}
+
+test {
+    exclude '**/acceptance/**'
 }
