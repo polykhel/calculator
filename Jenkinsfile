@@ -2,8 +2,9 @@ pipeline {
     agent any
 
     environment {
-        registry = "polypollens"
+        registry = "polypollens/calculator"
         registryCredential = 'dockerhub'
+        dockerImage = ''
     }
 
     stages {
@@ -45,17 +46,24 @@ pipeline {
         }
         stage("Docker build") {
             steps {
-                sh "docker build -t ${registry}/calculator ."
+                script {
+                    dockerImage = docker.build "${registry}:${BUILD_NUMBER}"
+                }
             }
         }
         stage("Docker push") {
             steps {
-                sh "docker push ${registry}/calculator"
+                script {
+                    docker.withRegistry('', registryCredential) {
+                        dockerImage.push()
+                    }
+                }
+                sh "docker rmi ${registry}:${BUILD_NUMBER}"
             }
         }
         stage("Deploy to staging") {
             steps {
-                sh "docker run -d --rm -p 8765:8080 --name calculator ${registry}/calculator"
+                sh "docker run -d --rm -p 8765:8080 --name calculator ${registry}:${BUILD_NUMBER}"
             }
         }
     }
