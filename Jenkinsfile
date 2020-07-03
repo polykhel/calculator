@@ -72,10 +72,10 @@ pipeline {
                 sh "./acceptance_test.sh"
             }
         }
-        post {
-            always {
-                sh "docker-compose down"
-            }
+    }
+    post {
+        always {
+            sh "docker-compose down"
         }
     }
 }
